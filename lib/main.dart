@@ -1,7 +1,13 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(DevicePreview(
+    enabled: !kReleaseMode,
+    builder: (context) => MyApp(), // Wrap your app
+  ),);
 }
 
 class MyApp extends StatelessWidget {
@@ -9,7 +15,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: OrigtionBuilderScreen());
+    return MaterialApp(
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      home: OrigtionBuilderScreen());
   }
 }
 
@@ -103,7 +115,67 @@ class OrigtionBuilderScreen extends StatelessWidget {
       body: OrientationBuilder(
         builder: (context, orientation) {
           if (orientation == Orientation.landscape) {
-            return FlutterLogo();
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // SizedBox(
+                //   height: 400,
+                //   child: ListWheelScrollView(
+                //     // offAxisFraction: 0.3,
+                //     // magnification: 0.5,
+                //     // useMagnifier: true,
+                //     onSelectedItemChanged: (value) {
+                //       print(value);
+                //     },
+                //     itemExtent: 200,
+                //     children: List.generate(
+                //       10,
+                //       (index) => Container(
+                //         width: 300,
+                //         height: 200,
+                //         color: Colors.red,
+                //         margin: EdgeInsets.all(10),
+                //       ),
+                //     ),
+                //   ),
+                // ),
+                Container(
+                  height: 200,
+                  color: Colors.green,
+                  width: (350/395)*MediaQuery.of(context).size.width,
+                ),
+                Center(
+                  child: Checkbox.adaptive(
+                    value: true,
+                    onChanged: (va) async {
+                      //  await   showDatePicker(
+
+                      //       context: context,
+                      //       firstDate: DateTime(2010),
+                      //       lastDate: DateTime(2026),
+                      //     );
+                      // await showTimePicker(
+                      //   context: context,
+                      //   initialTime: TimeOfDay.now(),
+                      // );
+                      await showCupertinoDialog(
+                        context: context,
+                        builder:
+                            (context) => Container(
+                              color: Colors.white70,
+                              child: CupertinoDatePicker(
+                                // backgroundColor: Colors.grey,
+                                onDateTimeChanged: (value) {
+                                  print(value);
+                                },
+                              ),
+                            ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            );
           } else {
             return Container(
               color: Colors.blueGrey,
