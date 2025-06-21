@@ -71,10 +71,7 @@ class TweenAnimationScreen extends StatefulWidget {
 }
 
 class _TweenAnimationScreenState extends State<TweenAnimationScreen> {
-  // Tween<Color?> colorTween = Tween<Color?>(
-  //   begin: Colors.teal,
-  //   end: Colors.blueGrey,
-  // );
+  ColorTween colorTween = ColorTween(begin: Colors.teal, end: Colors.blueGrey);
 
   Tween<double?> wight = Tween<double?>(begin: 1, end: 5);
 
@@ -87,13 +84,9 @@ class _TweenAnimationScreenState extends State<TweenAnimationScreen> {
             duration: Duration(seconds: 1),
             curve: Curves.decelerate,
             builder: (context, val, _) {
-              return Container(
-                width: 20 * val!,
-                height: 200,
-                color: Colors.teal,
-              );
+              return Container(width: 20, height: 200, color: val);
             },
-            tween: wight,
+            tween: colorTween,
           ),
           ElevatedButton(
             onPressed: () {},
@@ -166,11 +159,12 @@ class _AnimationBuilderScreenState extends State<AnimationBuilderScreen>
             color: Colors.blueGrey,
             child: InkWell(
               onTap: () {
-                controller.forward();
-                // controller.reverse();
+                controller.isCompleted
+                    ? controller.reverse()
+                    : controller.forward();
               },
               child: Icon(
-                controller.isCompleted
+                controller.isDismissed
                     ? Icons.favorite
                     : Icons.favorite_border_outlined,
                 size: sizeAnimation.value,
